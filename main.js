@@ -6,7 +6,7 @@ const ideas = [];
 
 const app = {
   ideas: ideas,
-  ideasList: ideaList, // Debería ser ideasList, no ideaList
+  ideasList: ideaList,
   newIdeaInput: newIdeaInput,
 };
 
@@ -99,10 +99,22 @@ window.onload = () => {
       saveIdeasToLocalStorage(app.ideas);
     });
 
+    const ideaDate = document.createElement("span");
+    ideaDate.className = "date";
+
+    const currentDate = new Date();
+
+    const formattedDate = `${currentDate.getDate()}/${
+      currentDate.getMonth() + 1
+    }/${currentDate.getFullYear()} ${currentDate.getHours()}:${currentDate.getMinutes()}:${currentDate.getSeconds()}`;
+
+    ideaDate.textContent = formattedDate;
+
     ideaElement.appendChild(ideaCheckbox);
     ideaElement.appendChild(ideaText);
     ideaElement.appendChild(ideaEditButton);
     ideaElement.appendChild(ideaDeleteButton);
+    ideaElement.appendChild(ideaDate);
     ideaElement.setAttribute("data-idea-id", idea.id);
 
     return ideaElement;
