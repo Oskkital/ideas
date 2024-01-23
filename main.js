@@ -25,29 +25,24 @@ function editIdea(idea) {
 
 function updateIdeaElement(idea) {
   const ideaElement = document.querySelector(`[data-idea-id="${idea.id}"]`);
-  const ideaText = ideaElement.querySelector(".idea-text");
+  const ideaText = ideaElement.querySelector("span");
   ideaText.textContent = idea.title;
 }
 
 window.onload = () => {
   const savedIdeas = JSON.parse(localStorage.getItem("ideas")) || [];
   app.ideas = savedIdeas.map((idea) => {
-    return createIdea(idea.title, idea.isRead, idea.date);
+    return createIdea(idea.title, idea.isRead);
   });
   app.ideas.forEach((idea) => {
     return addIdeaToList(idea, app.ideasList);
   });
 
-  function createIdea(
-    title,
-    isRead = false,
-    date = new Date().toLocaleString()
-  ) {
+  function createIdea(title, isRead = false) {
     return {
       id: Date.now(),
       title,
       isRead,
-      date,
     };
   }
 
@@ -57,21 +52,15 @@ window.onload = () => {
   }
 
   function addIdea(app) {
-    const newIdeaTitle = app.newIdeaInput.value.trim();
-    if (newIdeaTitle !== "") {
-      const newIdea = createIdea(newIdeaTitle);
-      app.ideas.push(newIdea);
+    const newIdeaTitle = app.newIdeaInput.value;
+    const newIdea = createIdea(newIdeaTitle);
+    app.ideas.push(newIdea);
 
-      addIdeaToList(newIdea, app.ideasList);
-      saveIdeasToLocalStorage(app.ideas);
-      app.newIdeaInput.value = "";
+    addIdeaToList(newIdea, app.ideasList);
+    saveIdeasToLocalStorage(app.ideas);
+    app.newIdeaInput.value = "";
 
-      console.log("Nueva idea añadida:", newIdea);
-    } else {
-      console.log(
-        "El título de la idea está vacío. No se añadió ninguna idea."
-      );
-    }
+    console.log("Nueva idea añadida:", newIdea);
   }
 
   function createIdeaElement(idea) {
@@ -79,8 +68,6 @@ window.onload = () => {
     const ideaCheckbox = document.createElement("input");
     ideaCheckbox.type = "checkbox";
     ideaCheckbox.checked = idea.isRead;
-
-    const ideaContainer = document.createElement("div");
 
     const ideaText = document.createElement("span");
     ideaText.textContent = idea.title;
@@ -114,11 +101,17 @@ window.onload = () => {
 
     const ideaDate = document.createElement("span");
     ideaDate.className = "date";
-    ideaDate.textContent = idea.date;
 
-    ideaContainer.appendChild(ideaText);
+    const currentDate = new Date();
+
+    const formattedDate = `${currentDate.getDate()}/${
+      currentDate.getMonth() + 1
+    }/${currentDate.getFullYear()} ${currentDate.getHours()}:${currentDate.getMinutes()}:${currentDate.getSeconds()}`;
+
+    ideaDate.textContent = formattedDate;
+
     ideaElement.appendChild(ideaCheckbox);
-    ideaElement.appendChild(ideaContainer);
+    ideaElement.appendChild(ideaText);
     ideaElement.appendChild(ideaEditButton);
     ideaElement.appendChild(ideaDeleteButton);
     ideaElement.appendChild(ideaDate);
