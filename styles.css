@@ -40,16 +40,17 @@ li {
     background-color: #328CC1;
     display: flex;
     color: #1D2731;
-    align-items: center;
     justify-content: space-between;
     margin-bottom: 10px;
     padding: 10px;
     border-radius: 4px;
-}
+  }
+ 
+
 
 .edit-button {
     background-color: #D9B310;
-    margin-left: auto; /* Alinea el botón a la derecha */
+    margin-left: auto; 
 }
 .completed {
     color: rgb(3, 253, 107);
