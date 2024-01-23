@@ -57,15 +57,21 @@ window.onload = () => {
   }
 
   function addIdea(app) {
-    const newIdeaTitle = app.newIdeaInput.value;
-    const newIdea = createIdea(newIdeaTitle);
-    app.ideas.push(newIdea);
+    const newIdeaTitle = app.newIdeaInput.value.trim();
+    if (newIdeaTitle !== "") {
+      const newIdea = createIdea(newIdeaTitle);
+      app.ideas.push(newIdea);
 
-    addIdeaToList(newIdea, app.ideasList);
-    saveIdeasToLocalStorage(app.ideas);
-    app.newIdeaInput.value = "";
+      addIdeaToList(newIdea, app.ideasList);
+      saveIdeasToLocalStorage(app.ideas);
+      app.newIdeaInput.value = "";
 
-    console.log("Nueva idea añadida:", newIdea);
+      console.log("Nueva idea añadida:", newIdea);
+    } else {
+      console.log(
+        "El título de la idea está vacío. No se añadió ninguna idea."
+      );
+    }
   }
 
   function createIdeaElement(idea) {
