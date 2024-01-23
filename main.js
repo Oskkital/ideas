@@ -14,6 +14,21 @@ function saveIdeasToLocalStorage(ideas) {
   localStorage.setItem("ideas", JSON.stringify(ideas));
 }
 
+function editIdea(idea) {
+  const newTitle = prompt("Editar idea:", idea.title);
+  if (newTitle !== null) {
+    idea.title = newTitle;
+    saveIdeasToLocalStorage(app.ideas);
+    updateIdeaElement(idea);
+  }
+}
+
+function updateIdeaElement(idea) {
+  const ideaElement = document.querySelector(`[data-idea-id="${idea.id}"]`);
+  const ideaText = ideaElement.querySelector("span");
+  ideaText.textContent = idea.title;
+}
+
 window.onload = () => {
   const savedIdeas = JSON.parse(localStorage.getItem("ideas")) || [];
   app.ideas = savedIdeas.map((idea) => {
@@ -64,6 +79,13 @@ window.onload = () => {
       saveIdeasToLocalStorage(app.ideas);
     });
 
+    const ideaEditButton = document.createElement("button");
+    ideaEditButton.textContent = "Editar";
+    ideaEditButton.className = "edit-button";
+    ideaEditButton.addEventListener("click", () => {
+      editIdea(idea);
+    });
+
     const ideaDeleteButton = document.createElement("button");
     ideaDeleteButton.textContent = "Eliminar";
     ideaDeleteButton.className = "delete-button";
@@ -76,9 +98,12 @@ window.onload = () => {
       }
       saveIdeasToLocalStorage(app.ideas);
     });
+
     ideaElement.appendChild(ideaCheckbox);
     ideaElement.appendChild(ideaText);
+    ideaElement.appendChild(ideaEditButton);
     ideaElement.appendChild(ideaDeleteButton);
+    ideaElement.setAttribute("data-idea-id", idea.id);
 
     return ideaElement;
   }
