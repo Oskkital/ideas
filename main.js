@@ -11,12 +11,13 @@ const app = {
 };
 
 function saveIdeasToLocalStorage(ideas) {
+  
   localStorage.setItem("ideas", JSON.stringify(ideas));
 }
 
 function editIdea(idea) {
   const newTitle = prompt("Editar idea:", idea.title);
-  if (newTitle !== null) {
+  if (newTitle != "") {
     idea.title = newTitle;
     saveIdeasToLocalStorage(app.ideas);
     updateIdeaElement(idea);
@@ -53,14 +54,17 @@ window.onload = () => {
 
   function addIdea(app) {
     const newIdeaTitle = app.newIdeaInput.value;
-    const newIdea = createIdea(newIdeaTitle);
-    app.ideas.push(newIdea);
-
-    addIdeaToList(newIdea, app.ideasList);
-    saveIdeasToLocalStorage(app.ideas);
-    app.newIdeaInput.value = "";
-
-    console.log("Nueva idea añadida:", newIdea);
+    console.log(typeof(newIdeaTitle))
+    if (newIdeaTitle != ""){
+      const newIdea = createIdea(newIdeaTitle);
+      app.ideas.push(newIdea);
+      
+      addIdeaToList(newIdea, app.ideasList);
+      saveIdeasToLocalStorage(app.ideas);
+      app.newIdeaInput.value = "";
+      
+      console.log("Nueva idea añadida:", newIdea);
+    }
   }
 
   function createIdeaElement(idea) {
