@@ -11,7 +11,6 @@ const app = {
 };
 
 function saveIdeasToLocalStorage(ideas) {
-  
   localStorage.setItem("ideas", JSON.stringify(ideas));
 }
 
@@ -48,26 +47,26 @@ window.onload = () => {
   }
 
   function addIdeaToList(idea, ideaList) {
-    const ideaElement = createIdeaElement(idea);
+    const ideaElement = renderTable(idea);
     ideaList.appendChild(ideaElement);
   }
 
   function addIdea(app) {
     const newIdeaTitle = app.newIdeaInput.value;
-    console.log(typeof(newIdeaTitle))
-    if (newIdeaTitle != ""){
+    console.log(typeof newIdeaTitle);
+    if (newIdeaTitle != "") {
       const newIdea = createIdea(newIdeaTitle);
       app.ideas.push(newIdea);
-      
+
       addIdeaToList(newIdea, app.ideasList);
       saveIdeasToLocalStorage(app.ideas);
       app.newIdeaInput.value = "";
-      
+
       console.log("Nueva idea añadida:", newIdea);
     }
   }
 
-  function createIdeaElement(idea) {
+  function renderTable(idea) {
     const ideaElement = document.createElement("li");
     const ideaCheckbox = document.createElement("input");
     ideaCheckbox.type = "checkbox";
