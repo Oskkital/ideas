@@ -68,12 +68,14 @@ window.onload = () => {
   }
 
   function createIdeaElement(idea) {
-    const ideaElement = document.createElement("li");
+    const ideaElement = document.createElement("div");
+    ideaElement.setAttribute("id", "card-idea");
     const ideaCheckbox = document.createElement("input");
     ideaCheckbox.type = "checkbox";
     ideaCheckbox.checked = idea.isRead;
 
     const ideaText = document.createElement("span");
+    ideaText.className = "text";
     ideaText.textContent = idea.title;
     ideaText.classList.toggle("completed", idea.isRead);
 
@@ -113,12 +115,13 @@ window.onload = () => {
     }/${currentDate.getFullYear()} ${currentDate.getHours()}:${currentDate.getMinutes()}:${currentDate.getSeconds()}`;
 
     ideaDate.textContent = formattedDate;
-
-    ideaElement.appendChild(ideaCheckbox);
+    
+	  ideaElement.appendChild(ideaDate);      
     ideaElement.appendChild(ideaText);
     ideaElement.appendChild(ideaEditButton);
     ideaElement.appendChild(ideaDeleteButton);
-    ideaElement.appendChild(ideaDate);
+    ideaElement.appendChild(ideaCheckbox);
+
     ideaElement.setAttribute("data-idea-id", idea.id);
 
     return ideaElement;

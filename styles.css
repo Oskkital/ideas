@@ -5,67 +5,77 @@ body {
     font-weight: 400;
     line-height: 1.5;
     color: #1D2731;
-    margin: 1rem;
-    padding: 0;
+ 	margin: 0 auto;
+    height: 100vh;
+  	text-align: center;
+  	width: 1000px;
 }
 
 h1 {
-    text-align: center;
     color: #328CC1;
 }
 
-input, button {
+.add-idea-container {
+ margin-bottom: 35px;
+}
+
+.add-idea-container input, button {
     font-size: 16px;
     padding: 8px;
     border: none;
     border-radius: 4px;
+  	cursor: pointer;
 }
 
-button {
-    background-color: #D9B310;
-    cursor: pointer;
-    color: #1D2731;
+#add-idea-button {
+    background-color: green;
+    color: white;
 }
 
-ul {
-    list-style-type: none;
-    padding: 0;
+#idea-list {
+    display: grid;
+  	grid-template-columns: 1fr;
+  	gap: 20px;	
 }
 
-ul button {
+#idea-list button {
     background-color: #328CC1;
 }
 
-li {
-    background-color: #328CC1;
-    display: flex;
-    color: #1D2731;
-    justify-content: space-between;
-    margin-bottom: 10px;
-    padding: 10px;
-    border-radius: 4px;
-  }
- 
-
-
-.edit-button {
-    background-color: #D9B310;
-    margin-left: auto; 
-}
-.completed {
-    color: rgb(3, 253, 107);
+#card-idea {
+  background-color: #328CC1;
+  color: #1D2731;
+  display: grid;
+  align-content: center;
+  align-items: center;
+  grid-template-columns: repeat(20, 1fr);
+  gap: 5px;
+  padding: 10px 5px; 
 }
 
-.delete-button {
-    background-color: #D9B310;
-    margin-left: 10px;
-}
-
-.input {
-    text-align: center;
-}
-
-.date {
-    margin-left: 10px;
+#card-idea .date {
+  	text-align: center;
+  	grid-column: span 3;
     font-weight: bold;
+}
+
+#card-idea .text {
+ 	grid-column: span 14;
+}
+
+#card-idea .edit-button {
+  	grid-column: span 1;
+    background-color: #D9B310;
+}
+
+#card-idea .delete-button {
+  	grid-column: span 1;
+    background-color: red;
+  	color: white;
+}
+
+#card-idea .completed {
+  	grid-column: span 1;
+    color: rgb(3, 253, 107);
+  	cursor: pointer;
 }
