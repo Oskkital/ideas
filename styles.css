@@ -24,7 +24,10 @@ h1 {
     padding: 8px;
     border: none;
     border-radius: 4px;
-  	cursor: pointer;
+}
+
+.add-idea-container button {
+  cursor: pointer;
 }
 
 #add-idea-button {
