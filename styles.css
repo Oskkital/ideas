@@ -35,13 +35,13 @@ h1 {
     color: white;
 }
 
-#idea-list {
+#ideas-container {
     display: grid;
   	grid-template-columns: 1fr;
   	gap: 20px;	
 }
 
-#idea-list button {
+#ideas-container button {
     background-color: #328CC1;
 }
 
