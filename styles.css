@@ -26,9 +26,6 @@ h1 {
     border-radius: 4px;
 }
 
-.add-idea-container button {
-  cursor: pointer;
-}
 
 #add-idea-button {
     background-color: green;

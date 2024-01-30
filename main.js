@@ -99,7 +99,6 @@ function renderCardIdea(idea) {
   ideaElement.appendChild(ideaEditButton);
   ideaElement.appendChild(ideaDeleteButton);
   ideaElement.appendChild(ideaCheckbox);
-
   ideaElement.setAttribute("data-idea-id", idea.id);
 
   return ideaElement;
