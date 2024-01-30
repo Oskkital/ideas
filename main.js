@@ -31,7 +31,7 @@ function editObjectIdea(idea) {
 
 // Adds the given idea to the ideas-container div
 function addIdeaToContainer(idea, ideasContainer) {
-  const ideaElement = renderCardIdea(idea);
+  const ideaElement = renderCardIdea(idea, staticDate);
   ideasContainer.appendChild(ideaElement);
 }
 
@@ -52,7 +52,8 @@ function handleAddIdeaButton(app) {
 }
 
 // Returns the card-idea element required for the ideas-container
-function renderCardIdea(idea) {
+function renderCardIdea(idea, currentDate) {
+  // We must provide currentDate as a parameter
   const ideaElement = document.createElement("div");
   ideaElement.setAttribute("id", "card-idea");
 
@@ -92,14 +93,7 @@ function renderCardIdea(idea) {
 
   const ideaDate = document.createElement("span");
   ideaDate.className = "date";
-
-  const currentDate = new Date();
-
-  const formattedDate = `${currentDate.getDate()}/${
-    currentDate.getMonth() + 1
-  }/${currentDate.getFullYear()} ${currentDate.getHours()}:${currentDate.getMinutes()}:${currentDate.getSeconds()}`;
-
-  ideaDate.textContent = formattedDate;
+  ideaDate.textContent = currentDate; // Using the current date
 
   ideaElement.appendChild(ideaDate);
   ideaElement.appendChild(ideaText);
@@ -112,11 +106,20 @@ function renderCardIdea(idea) {
   return ideaElement;
 }
 
+// Function that gives the current date
+function getCurrentDate() {
+  const currentDate = new Date();
+  return `${currentDate.getDate()}/${
+    currentDate.getMonth() + 1
+  }/${currentDate.getFullYear()} ${currentDate.getHours()}:${currentDate.getMinutes()}:${currentDate.getSeconds()}`;
+}
+
+// Creating the static date using the previous function
+const staticDate = getCurrentDate();
 
 function saveIdeasToLocalStorage(ideas) {
   localStorage.setItem("ideas", JSON.stringify(ideas));
 }
-
 
 function updateIdeaElement(idea) {
   const ideaElement = document.querySelector(`[data-idea-id="${idea.id}"]`);
@@ -127,12 +130,17 @@ function updateIdeaElement(idea) {
 window.onload = () => {
   // Get the list stored in Local Storage to save it in app.ideas
   const savedIdeas = JSON.parse(localStorage.getItem("ideas")) || [];
-  app.ideas = savedIdeas.map((idea) => createObjectIdea(idea.title, idea.isRead));
+  app.ideas = savedIdeas.map((idea) =>
+    createObjectIdea(idea.title, idea.isRead)
+  );
 
   // Add each idea from app.ideas to ideas-container
   app.ideas.forEach((idea) => addIdeaToContainer(idea, app.ideasContainer));
 
   // Required events
   newIdeaButton.addEventListener("click", () => handleAddIdeaButton(app));
-  newIdeaInput.addEventListener("keydown", (event) => (event.key === "Enter") && handleAddIdeaButton(app));
+  newIdeaInput.addEventListener(
+    "keydown",
+    (event) => event.key === "Enter" && handleAddIdeaButton(app)
+  );
 };

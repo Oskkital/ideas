@@ -78,7 +78,8 @@ h1 {
 }
 
 #card-idea .completed {
-  	grid-column: span 1;
+    text-align: center;
+  	grid-column: span 14;
     color: rgb(3, 253, 107);
   	cursor: pointer;
 }
