@@ -10,10 +10,18 @@ const app = {
   newIdeaInput: newIdeaInput,
 };
 
+// Takes ideas saved in local Storage and adds in app.ideas array
+function getLocalStorageData() {
+  const savedIdeas = JSON.parse(localStorage.getItem("ideas")) || [];
+  app.ideas = savedIdeas.map((idea) =>
+    createObjectIdea(idea.title, idea.isRead, idea.id)
+  );
+}
+
 // Returns the idea object {id, title, isRead}
-function createObjectIdea(title, isRead = false) {
+function createObjectIdea(title, isRead = false, id = 0) {
   return {
-    id: Date.now(),
+    id: id !== 0 ? id : Date.now(),
     title,
     isRead,
   };
@@ -29,12 +37,6 @@ function editObjectIdea(idea) {
   }
 }
 
-// Adds the given idea to the ideas-container div
-function addIdeaToContainer(idea, ideasContainer) {
-  const ideaElement = renderCardIdea(idea);
-  ideasContainer.appendChild(ideaElement);
-}
-
 // Handles the add-idea-button taking the new-idea-input
 function handleAddIdeaButton(app) {
   const newIdeaTitle = app.newIdeaInput.value;
@@ -43,74 +45,83 @@ function handleAddIdeaButton(app) {
     const newIdea = createObjectIdea(newIdeaTitle);
     app.ideas.push(newIdea);
 
-    addIdeaToContainer(newIdea, app.ideasContainer);
     saveIdeasToLocalStorage(app.ideas);
+    renderIdeasContainer()
     app.newIdeaInput.value = "";
 
     console.log("Nueva idea añadida:", newIdea);
   }
 }
 
-// Returns the card-idea element required for the ideas-container
-function renderCardIdea(idea) {
-  const ideaElement = document.createElement("div");
-  ideaElement.setAttribute("id", "card-idea");
-
-  const ideaCheckbox = document.createElement("input");
-  ideaCheckbox.type = "checkbox";
-  ideaCheckbox.checked = idea.isRead;
-
-  const ideaText = document.createElement("span");
-  ideaText.className = "text";
-  ideaText.textContent = idea.title;
-  ideaText.classList.toggle("completed", idea.isRead);
-
-  ideaCheckbox.addEventListener("change", () => {
-    idea.isRead = ideaCheckbox.checked;
-    ideaText.classList.toggle("completed", idea.isRead);
-    saveIdeasToLocalStorage(app.ideas);
-  });
-
-  const ideaEditButton = document.createElement("button");
-  ideaEditButton.textContent = "Editar";
-  ideaEditButton.className = "edit-button";
-  ideaEditButton.addEventListener("click", () => editObjectIdea(idea));
-
-  const ideaDeleteButton = document.createElement("button");
-  ideaDeleteButton.textContent = "Eliminar";
-  ideaDeleteButton.className = "delete-button";
-  ideaDeleteButton.addEventListener("click", () => {
-    ideaElement.remove();
-    const ideaIndex = app.ideas.indexOf(idea);
-
-    if (ideaIndex > -1) {
-      app.ideas.splice(ideaIndex, 1);
+// Render the ideas-container element with the ideas saved in local storage
+function renderIdeasContainer() {    
+    if (ideasContainer.children.length > 0) {
+        ideasContainer.innerHTML = "";
     }
+  
+  getLocalStorageData()
 
-    saveIdeasToLocalStorage(app.ideas);
-  });
+  app.ideas.forEach(idea => {
+    const ideaElement = document.createElement("div");
+    ideaElement.setAttribute("id", "card-idea");
 
-  const ideaDate = document.createElement("span");
-  ideaDate.className = "date";
-  ideaDate.textContent = getCurrentDate(); // Using the current date
+    const ideaCheckbox = document.createElement("input");
+    ideaCheckbox.type = "checkbox";
+    ideaCheckbox.checked = idea.isRead;
 
-  ideaElement.appendChild(ideaDate);
-  ideaElement.appendChild(ideaText);
-  ideaElement.appendChild(ideaEditButton);
-  ideaElement.appendChild(ideaDeleteButton);
-  ideaElement.appendChild(ideaCheckbox);
+    const ideaText = document.createElement("span");
+    ideaText.className = "text";
+    ideaText.textContent = idea.title;
+    ideaText.classList.toggle("completed", idea.isRead);
 
-  ideaElement.setAttribute("data-idea-id", idea.id);
+    ideaCheckbox.addEventListener("change", () => {
+      idea.isRead = ideaCheckbox.checked;
+      ideaText.classList.toggle("completed", idea.isRead);
+      saveIdeasToLocalStorage(app.ideas);
+    });
 
-  return ideaElement;
+    const ideaEditButton = document.createElement("button");
+    ideaEditButton.textContent = "Editar";
+    ideaEditButton.className = "edit-button";
+    ideaEditButton.addEventListener("click", () => editObjectIdea(idea));
+
+    const ideaDeleteButton = document.createElement("button");
+    ideaDeleteButton.textContent = "Eliminar";
+    ideaDeleteButton.className = "delete-button";
+    ideaDeleteButton.addEventListener("click", () => {
+      ideaElement.remove();
+      const ideaIndex = app.ideas.indexOf(idea);
+
+      if (ideaIndex > -1) {
+        app.ideas.splice(ideaIndex, 1);
+      }
+
+      saveIdeasToLocalStorage(app.ideas);
+    });
+
+    const ideaDate = document.createElement("span");
+    ideaDate.className = "date";
+    ideaDate.textContent = getCurrentDate(idea); // Using the current date
+
+    ideaElement.appendChild(ideaDate);
+    ideaElement.appendChild(ideaText);
+    ideaElement.appendChild(ideaEditButton);
+    ideaElement.appendChild(ideaDeleteButton);
+    ideaElement.appendChild(ideaCheckbox);
+
+    ideaElement.setAttribute("data-idea-id", idea.id);
+
+    ideasContainer.appendChild(ideaElement);
+  })
 }
 
-// Function that gives the current date
-function getCurrentDate() {
-  const currentDate = new Date();
-  return `${currentDate.getDate()}/${
-    currentDate.getMonth() + 1
-  }/${currentDate.getFullYear()} ${currentDate.getHours()}:${currentDate.getMinutes()}:${currentDate.getSeconds()}`;
+// Returns the given idea formated date
+function getCurrentDate(idea) {
+    const ideaIndex = app.ideas.indexOf(idea);
+    ideaIndex == -1 ? currentDate = new Date() : currentDate = new Date(app.ideas[ideaIndex].id)
+    return `${currentDate.getDate()}/${
+      currentDate.getMonth() + 1
+    }/${currentDate.getFullYear()} ${currentDate.getHours()}:${currentDate.getMinutes()}:${currentDate.getSeconds()}`;
 }
 
 function saveIdeasToLocalStorage(ideas) {
@@ -125,14 +136,7 @@ function updateIdeaTitle(idea) {
 }
 
 window.onload = () => {
-  // Get the list stored in Local Storage to save it in app.ideas
-  const savedIdeas = JSON.parse(localStorage.getItem("ideas")) || [];
-  app.ideas = savedIdeas.map((idea) =>
-    createObjectIdea(idea.title, idea.isRead)
-  );
-
-  // Add each idea from app.ideas to ideas-container
-  app.ideas.forEach((idea) => addIdeaToContainer(idea, app.ideasContainer));
+  renderIdeasContainer(app.ideasContainer)
 
   // Required events
   newIdeaButton.addEventListener("click", () => handleAddIdeaButton(app));
