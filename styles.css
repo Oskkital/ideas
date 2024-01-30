@@ -83,3 +83,7 @@ h1 {
     color: rgb(3, 253, 107);
   	cursor: pointer;
 }
+
+button {
+  cursor: pointer;
+}
