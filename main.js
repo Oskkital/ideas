@@ -22,16 +22,16 @@ function createObjectIdea(title, isRead = false) {
 // Returns the updated idea object {id, title, isRead} with the new title
 function editObjectIdea(idea) {
   const newTitle = prompt("Editar idea:", idea.title);
-  if (newTitle != "") {
+  if (newTitle != null) {
     idea.title = newTitle;
     saveIdeasToLocalStorage(app.ideas);
-    updateIdeaElement(idea);
+    updateIdeaTitle(idea);
   }
 }
 
 // Adds the given idea to the ideas-container div
 function addIdeaToContainer(idea, ideasContainer) {
-  const ideaElement = renderCardIdea(idea, staticDate);
+  const ideaElement = renderCardIdea(idea);
   ideasContainer.appendChild(ideaElement);
 }
 
@@ -52,8 +52,7 @@ function handleAddIdeaButton(app) {
 }
 
 // Returns the card-idea element required for the ideas-container
-function renderCardIdea(idea, currentDate) {
-  // We must provide currentDate as a parameter
+function renderCardIdea(idea) {
   const ideaElement = document.createElement("div");
   ideaElement.setAttribute("id", "card-idea");
 
@@ -93,7 +92,7 @@ function renderCardIdea(idea, currentDate) {
 
   const ideaDate = document.createElement("span");
   ideaDate.className = "date";
-  ideaDate.textContent = currentDate; // Using the current date
+  ideaDate.textContent = getCurrentDate(); // Using the current date
 
   ideaElement.appendChild(ideaDate);
   ideaElement.appendChild(ideaText);
@@ -114,16 +113,14 @@ function getCurrentDate() {
   }/${currentDate.getFullYear()} ${currentDate.getHours()}:${currentDate.getMinutes()}:${currentDate.getSeconds()}`;
 }
 
-// Creating the static date using the previous function
-const staticDate = getCurrentDate();
-
 function saveIdeasToLocalStorage(ideas) {
   localStorage.setItem("ideas", JSON.stringify(ideas));
 }
 
-function updateIdeaElement(idea) {
+// Function to update only the idea title in the UI
+function updateIdeaTitle(idea) {
   const ideaElement = document.querySelector(`[data-idea-id="${idea.id}"]`);
-  const ideaText = ideaElement.querySelector("span");
+  const ideaText = ideaElement.querySelector(".text");
   ideaText.textContent = idea.title;
 }
 
